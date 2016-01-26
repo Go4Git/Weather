@@ -31,6 +31,15 @@ final class Weather: ResponseObjectSerializable {
         self.windSpeed = currently.valueForKeyPath("windSpeed") as! Int
     }
     
+    init(raw: AnyObject) {
+        self.feelsLike = raw["apparentTemperatureMax"] as! Int
+        self.temperature = raw["temperatureMax"] as! Int
+        self.icon = raw["icon"] as! String
+        self.summary = raw["summary"] as! String
+        self.humidity = raw["humidity"] as! Double
+        self.windSpeed = raw["windSpeed"] as! Int
+    }
+    
     /**
         Default initializer for forecast.
     */

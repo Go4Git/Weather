@@ -1,3 +1,5 @@
 /revision_screenshots
 
 *.pbxproj
+
+*.xcuserstate
