@@ -113,6 +113,10 @@ class ViewController: UIViewController, UITableViewDelegate {
                 self.fadeInUI() //Fade in UI after async callback
             }
             
+            api.getDailyForecast(location) { (forecast) -> Void in
+                //TODO
+            }
+            
             updateTimeAndPlace()
         }
     }

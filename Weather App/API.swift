@@ -47,14 +47,18 @@ class API {
             }
         }
     }
+    
+    func getDailyForecast(loc: Location, completionHandler: (forecast: Forecast) -> Void) {
+        if let url: String = requestURL + loc.getURLExtension() {
+            Alamofire.request(.GET, url)
+                .responseObject { (response: Response<Forecast, NSError>) in
+                    if let dailyForecast = response.result.value {
+                        completionHandler(forecast: dailyForecast)
+                    } else {
+                        print(response.result.error)
+                    }
+            }
+        }
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
