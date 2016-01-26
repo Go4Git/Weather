@@ -18,6 +18,9 @@ final class Weather: ResponseObjectSerializable {
     let humidity: Double
     let windSpeed: Int
     
+    /**
+        Used for serialization upon HTTP response.
+    */
     init?(response: NSHTTPURLResponse, representation: AnyObject) {
         let currently = representation.valueForKeyPath("currently")!
         self.feelsLike = currently.valueForKeyPath("apparentTemperature") as! Int
@@ -26,5 +29,18 @@ final class Weather: ResponseObjectSerializable {
         self.summary = currently.valueForKeyPath("summary") as! String
         self.humidity = currently.valueForKeyPath("humidity") as! Double
         self.windSpeed = currently.valueForKeyPath("windSpeed") as! Int
+    }
+    
+    /**
+        Default initializer for forecast.
+    */
+    init(feelsLike: Int, temperature: Int, icon: String, summary: String, humidity: Double,
+        windSpeed: Int) {
+            self.feelsLike = feelsLike
+            self.temperature = temperature
+            self.icon = icon;
+            self.summary = summary
+            self.humidity = humidity
+            self.windSpeed = windSpeed
     }
 }
