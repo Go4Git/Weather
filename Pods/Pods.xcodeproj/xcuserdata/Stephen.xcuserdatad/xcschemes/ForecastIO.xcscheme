@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '659B9FC06ECF27184C79A8F7'
-               BlueprintName = 'Alamofire'
+               BlueprintIdentifier = '77AA5906770F21F4F891848E'
+               BlueprintName = 'ForecastIO'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'Alamofire.framework'>
+               BuildableName = 'ForecastIO.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

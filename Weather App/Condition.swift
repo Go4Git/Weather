@@ -53,10 +53,22 @@ class Condition {
         return "unknown"
     }
     
+    /**
+        Gets the length of the current weather condition displayed. This
+        value is used when calculating from and to what index the display
+        strings should be colored.
+
+        - Returns: The character length of the current weather condition.
+    */
     func getLength() -> Int {
         return getStatus().characters.count
     }
     
+    /**
+        Gets the appropriate color for the current weather conditions.
+
+        - Returns: A `UIColor` to match the current weather conditions.
+     */
     func getColorRepresentation() -> UIColor {
         if let type = conditionDictionary[icon] {
             switch type {

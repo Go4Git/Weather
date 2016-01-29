@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import SwiftyJSON
-import Alamofire
+import ForecastIO
 
 //TODO: Change background color to black at night
 class ViewController: UIViewController, UITableViewDelegate {
@@ -19,11 +18,11 @@ class ViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var conditionLabel: UILabel!
     @IBOutlet weak var forecastTable: UITableView!
     
-    //API object
-    var api: API = API()
+    //ForecastIO wrapper by Satyam Ghodasara
+    let forecastIOClient: APIClient = APIClient(apiKey: "b58958b9ee32f22df382b6f0559361e8")
     
     //Location service object
-    var locationService: LocationService = LocationService()
+    let locationService: LocationService = LocationService()
     
     //The timer for updating time and place
     var timer: NSTimer?
@@ -62,12 +61,14 @@ class ViewController: UIViewController, UITableViewDelegate {
      - Parameter condition: The current weather conditions.
      */
     func prettifyConditionLabel(condition: Condition) {
-        conditionString = "It's \(condition.getStatus()) out."
+        conditionLabel.text = "It's \(condition.getStatus()) out."
+        let coloration: PartialColoration = PartialColoration(start: 5, length: condition.getLength(), color: condition.getColorRepresentation())
+        conditionLabel.addPartialColor(coloration)
         
-        let mutableCond = NSMutableAttributedString(string: String(conditionString), attributes: [NSFontAttributeName: temperatureLabel.font!])
-        mutableCond.addAttribute(NSForegroundColorAttributeName, value: condition.getColorRepresentation(), range: NSRange(location: 5, length: condition.getLength()))
-        
-        conditionLabel.attributedText = mutableCond
+//        let mutableCond = NSMutableAttributedString(string: String(conditionString), attributes: [NSFontAttributeName: temperatureLabel.font!])
+//        mutableCond.addAttribute(NSForegroundColorAttributeName, value: condition.getColorRepresentation(), range: NSRange(location: 5, length: condition.getLength()))
+//        
+//        conditionLabel.attributedText = mutableCond
     }
     
     //Fades in all the UI components from an alpha of zero
@@ -99,28 +100,29 @@ class ViewController: UIViewController, UITableViewDelegate {
     */
     func setupUI() {
         if let location = locationService.getLocation() {
-            api.getCurrentWeather(location) { (weather) -> Void in
-                print("Current weather:")
-                print("-----------------")
-                print("Feels like: \(weather.feelsLike)")
-                print("Temperature: \(weather.temperature)")
-                print("Condition: \(weather.icon)")
-                print("Humidity: \(weather.humidity * 100)%")
-                print("Wind speed: \(weather.windSpeed)mph")
-            
-                self.prettifyTempLabels(weather.temperature, feelsLike: weather.feelsLike)
-                self.prettifyConditionLabel(Condition(icon: weather.icon))
-                self.fadeInUI() //Fade in UI after async callback
-            }
-            
-            api.getDailyForecast(location) { (forecast) -> Void in
-                //TODO
-            }
-            
+          print("Location determined... Attempting to grab weather.");
+            forecastIOClient.getForecast(latitude: location.latitude,
+                longitude: location.longitude, completion: { (forecast, error) -> Void in
+                    print("Current weather:")
+                    print("-----------------")
+                    if let currently = forecast?.currently {
+                        print("Feels like: \(currently.apparentTemperature!)")
+                        print("Temperature: \(currently.temperature!)")
+                        print("Condition: \(currently.icon!)")
+                        print("Humidity: \(currently.humidity! * 100)%")
+                        print("Wind speed: \(currently.windSpeed!)mph")
+                        
+                        self.prettifyTempLabels(Int(currently.temperature!), feelsLike: Int(currently.apparentTemperature!))
+                        self.prettifyConditionLabel(Condition(icon: currently.icon!.rawValue))
+                        //self.fadeInUI() //Fade in UI after async callback
+
+                    }
+            })
+          
             updateTimeAndPlace()
         }
     }
-    
+  
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
@@ -133,7 +135,7 @@ class ViewController: UIViewController, UITableViewDelegate {
     
     override func viewDidAppear(animated: Bool) {
         print("Appeared")
-        setupUI()
+        //setupUI() //Causes it to call twice on startup
     }
     
     override func viewDidLoad() {
@@ -145,13 +147,8 @@ class ViewController: UIViewController, UITableViewDelegate {
             //TODO: Bug - doesn't update after user clicks allow. Only on next reload.
             locationService.promptUserToEnable()
         }
-        
+      
         timer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "updateTimeAndPlace", userInfo: nil, repeats: true)
-        locationLabel.alpha = 0
-        timeAndDayLabel.alpha = 0
-        temperatureLabel.alpha = 0
-        conditionLabel.alpha = 0
-        forecastTable.alpha = 0
     }
 
     override func didReceiveMemoryWarning() {

@@ -84,10 +84,8 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "Pods-Weather App/Alamofire.framework"
-  install_framework "Pods-Weather App/SwiftyJSON.framework"
+  install_framework "Pods-Weather App/ForecastIO.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "Pods-Weather App/Alamofire.framework"
-  install_framework "Pods-Weather App/SwiftyJSON.framework"
+  install_framework "Pods-Weather App/ForecastIO.framework"
 fi
