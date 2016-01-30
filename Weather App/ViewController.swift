@@ -27,11 +27,6 @@ class ViewController: UIViewController, UITableViewDelegate {
     //The timer for updating time and place
     var timer: NSTimer?
     
-    //Feels like and current temperature label
-    //Declared inside view controller so we can color different parts of it
-    var temperatureString: NSString = ""
-    var conditionString: NSString = ""
-    
     /**
         Colors the temperature string based on gathered weather data.
      
@@ -39,20 +34,21 @@ class ViewController: UIViewController, UITableViewDelegate {
         - Parameter feelsLike: The temperature it feels like outside.
     */
     func prettifyTempLabels(temperature: Int, feelsLike: Int) {
-        temperatureString = "\(temperature)°, feels like \(feelsLike)°."
-
         //Colors: TODO: Get these depending on the current temperature
         let temperatureColor: UIColor = UIColor(red: 127/255, green: 209/255, blue: 160/255, alpha: 1)
         let feelsLikeColor: UIColor = UIColor(red: 123/255, green: 66/255, blue: 251/255, alpha: 1)
         
-        //Temperature label
-        let tempLength = String(temperature).characters.count + 1 //+1 for the ° symbol
-        let feelsLikeLength = String(feelsLike).characters.count + 1 //"    "
-        let mutableTemp = NSMutableAttributedString(string: String(temperatureString), attributes: [NSFontAttributeName: temperatureLabel.font!])
-        
-        mutableTemp.addAttribute(NSForegroundColorAttributeName, value: temperatureColor, range: NSRange(location: 0, length: tempLength))
-        mutableTemp.addAttribute(NSForegroundColorAttributeName, value: feelsLikeColor, range: NSRange(location: tempLength +  13, length: feelsLikeLength))
-        temperatureLabel.attributedText = mutableTemp
+        dispatch_async(dispatch_get_main_queue(), {
+            self.temperatureLabel.text = "\(temperature)°, feels like \(feelsLike)°."
+            
+            let tempLength = String(temperature).characters.count + 1 //+1 for the ° symbol
+            let tempColoration = PartialColoration(start: 0, length: tempLength, color: temperatureColor);
+
+            let feelsLikeLength = String(feelsLike).characters.count + 1 //+1 for the ° symbol
+            let feelsLikeColoration = PartialColoration(start:  tempLength + 13, length: feelsLikeLength, color: feelsLikeColor)
+            
+            self.temperatureLabel.addPartialColor(tempColoration, feelsLikeColoration)
+        })
     }
     
     /**
@@ -61,25 +57,24 @@ class ViewController: UIViewController, UITableViewDelegate {
      - Parameter condition: The current weather conditions.
      */
     func prettifyConditionLabel(condition: Condition) {
-        conditionLabel.text = "It's \(condition.getStatus()) out."
-        let coloration: PartialColoration = PartialColoration(start: 5, length: condition.getLength(), color: condition.getColorRepresentation())
-        conditionLabel.addPartialColor(coloration)
-        
-//        let mutableCond = NSMutableAttributedString(string: String(conditionString), attributes: [NSFontAttributeName: temperatureLabel.font!])
-//        mutableCond.addAttribute(NSForegroundColorAttributeName, value: condition.getColorRepresentation(), range: NSRange(location: 5, length: condition.getLength()))
-//        
-//        conditionLabel.attributedText = mutableCond
+        dispatch_async(dispatch_get_main_queue(), {
+          self.conditionLabel.text = "It's \(condition.getStatus()) out."
+          let coloration: PartialColoration = PartialColoration(start: 5, length: condition.getLength(), color: condition.getColorRepresentation())
+          self.conditionLabel.addPartialColor(coloration)
+        })
     }
     
     //Fades in all the UI components from an alpha of zero
     func fadeInUI() {
-        UIView.animateWithDuration(1) { () -> Void in
-            self.locationLabel.alpha = 1
-            self.timeAndDayLabel.alpha = 1
-            self.temperatureLabel.alpha = 1
-            self.conditionLabel.alpha = 1
-            self.forecastTable.alpha = 1
-        }
+        dispatch_async(dispatch_get_main_queue(), {
+            UIView.animateWithDuration(1) { () -> Void in
+                self.locationLabel.alpha = 1
+                self.timeAndDayLabel.alpha = 1
+                self.temperatureLabel.alpha = 1
+                self.conditionLabel.alpha = 1
+                self.forecastTable.alpha = 1
+            }
+        })
     }
     
     /**
@@ -114,8 +109,8 @@ class ViewController: UIViewController, UITableViewDelegate {
                         
                         self.prettifyTempLabels(Int(currently.temperature!), feelsLike: Int(currently.apparentTemperature!))
                         self.prettifyConditionLabel(Condition(icon: currently.icon!.rawValue))
-                        //self.fadeInUI() //Fade in UI after async callback
-
+                        self.fadeInUI() //Fade in UI after async callback
+                        self.timer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "updateTimeAndPlace", userInfo: nil, repeats: true)
                     }
             })
           
@@ -147,8 +142,15 @@ class ViewController: UIViewController, UITableViewDelegate {
             //TODO: Bug - doesn't update after user clicks allow. Only on next reload.
             locationService.promptUserToEnable()
         }
-      
-        timer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: "updateTimeAndPlace", userInfo: nil, repeats: true)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        locationLabel.alpha = 0
+        timeAndDayLabel.alpha = 0
+        temperatureLabel.alpha = 0
+        conditionLabel.alpha = 0
+        forecastTable.alpha = 0
     }
 
     override func didReceiveMemoryWarning() {

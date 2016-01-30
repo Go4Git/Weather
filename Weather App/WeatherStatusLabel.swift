@@ -19,11 +19,22 @@ struct PartialColoration {
 }
 
 extension UILabel {
-    
-    func addPartialColor(coloration: PartialColoration) {
+  
+    /**
+      Adds a `PartialColoration` to a `UILabel`.
+
+      - Parameter coloration: The partial coloration to add.
+    */
+    func addPartialColor(colorations: PartialColoration...) {
         let mutableString = NSMutableAttributedString(string: self.text!, attributes: [NSFontAttributeName: self.font])
-        mutableString.addAttribute(NSForegroundColorAttributeName,
-            value: coloration.color, range: NSRange(location: coloration.start, length: coloration.length))
+        
+        for (var i = 0; i < colorations.count; i++) {
+            let coloration = colorations[i];
+            mutableString.addAttribute(NSForegroundColorAttributeName,
+                value: coloration.color, range: NSRange(location: coloration.start, length: coloration.length))
+        }
+        //mutableString.addAttribute(NSForegroundColorAttributeName,
+           // value: coloration.color, range: NSRange(location: coloration.start, length: coloration.length))
         
         self.attributedText = mutableString
     }

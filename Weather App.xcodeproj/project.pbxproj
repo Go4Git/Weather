@@ -12,6 +12,7 @@
 		BA82298E6BB83CA17AE79413 /* Pods_Weather_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220D9122D8664DC790B7D5D3 /* Pods_Weather_App.framework */; };
 		DC0895081C5815C800225941 /* WeatherStatusLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0895071C5815C800225941 /* WeatherStatusLabel.swift */; };
 		DC33915D1C5C04E300463012 /* Benchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33915C1C5C04E300463012 /* Benchmark.swift */; };
+		DC5E5D111C5C16FD00030B19 /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = DC5E5D101C5C16FD00030B19 /* PSPDFUIKitMainThreadGuard.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DCACBD3D1C447AC600C321A3 /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCACBD3C1C447AC600C321A3 /* Condition.swift */; };
 		DCB70FF71C40597F005064B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB70FF61C40597F005064B7 /* AppDelegate.swift */; };
 		DCB70FF91C40597F005064B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB70FF81C40597F005064B7 /* ViewController.swift */; };
@@ -28,6 +29,8 @@
 		ABC26B781C40ED04001CF742 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		DC0895071C5815C800225941 /* WeatherStatusLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherStatusLabel.swift; sourceTree = "<group>"; };
 		DC33915C1C5C04E300463012 /* Benchmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Benchmark.swift; sourceTree = "<group>"; };
+		DC5E5D101C5C16FD00030B19 /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PSPDFUIKitMainThreadGuard.m; path = "Weather App/PSPDFUIKitMainThreadGuard.m"; sourceTree = "<group>"; };
+		DC5E5D121C5C174A00030B19 /* Weather App-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Weather App-Bridging-Header.h"; path = "../../../.Trash/Weather App-Bridging-Header.h"; sourceTree = "<group>"; };
 		DCACBD3C1C447AC600C321A3 /* Condition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
 		DCB70FF31C40597F005064B7 /* Weather App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCB70FF61C40597F005064B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +81,7 @@
 		DCB70FEA1C40597F005064B7 = {
 			isa = PBXGroup;
 			children = (
+				DC5E5D101C5C16FD00030B19 /* PSPDFUIKitMainThreadGuard.m */,
 				DCB70FF51C40597F005064B7 /* Weather App */,
 				DCB70FF41C40597F005064B7 /* Products */,
 				BAB022132AC0359320C1ADBD /* Pods */,
@@ -107,6 +111,7 @@
 				DCB70FFF1C40597F005064B7 /* LaunchScreen.storyboard */,
 				DCB710021C40597F005064B7 /* Info.plist */,
 				DC0895071C5815C800225941 /* WeatherStatusLabel.swift */,
+				DC5E5D121C5C174A00030B19 /* Weather App-Bridging-Header.h */,
 			);
 			path = "Weather App";
 			sourceTree = "<group>";
@@ -234,6 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC5E5D111C5C16FD00030B19 /* PSPDFUIKitMainThreadGuard.m in Sources */,
 				DCACBD3D1C447AC600C321A3 /* Condition.swift in Sources */,
 				DC33915D1C5C04E300463012 /* Benchmark.swift in Sources */,
 				AB24EAF31C42F7DA0055EAD6 /* LocationService.swift in Sources */,
@@ -354,6 +360,7 @@
 			baseConfigurationReference = 68FCA8675C221A8E5740AE4B /* Pods-Weather App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Weather App/Info.plist";
@@ -361,6 +368,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.sabretooth.Weather-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Weather App/Weather App-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -369,6 +378,7 @@
 			baseConfigurationReference = 64022FDE860E7BE251A292ED /* Pods-Weather App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Weather App/Info.plist";
@@ -376,6 +386,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.sabretooth.Weather-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Weather App/Weather App-Bridging-Header.h";
 			};
 			name = Release;
 		};
